@@ -5,7 +5,8 @@
 #include "rock.hpp"
 
 void RockInRio();
-void readScores(int A, int S);
+std::vector<float> createScoresVector(int A, int S);
+void printScores(std::vector<float> sums);
 
 int main() {
   
@@ -22,23 +23,34 @@ int main() {
 // Ler entradas e checar se os votos sao satisfaziveis
 void RockInRio() {
     int A = 0, S = 0;
+    std::vector<float> scoreSums;
 
     do {
         std::cin >> A >> S;
-        readScores(A, S);
-        std::cout << A << " " << S << std::endl;
+        scoreSums = createScoresVector(A, S);
+        printScores(scoreSums);
 
     } while (A > 0 && S > 0);
 
 }
 
-void readScores(int A, int S) {
+std::vector<float> createScoresVector(int A, int S) {
     float score = 0;
+    std::vector<float> scoreSums(S, 0);
+
     for (int i = 0; i < A; i++) {
         for (int j = 0; j < S; j++) { 
             std::cin >> score;
-            std::cout << score << " ";
+            scoreSums[j] += score;
         }
-        std::cout << std::endl;
+    }
+
+    return scoreSums;
+}
+
+void printScores(std::vector<float> sums) {
+    int j = 1;
+    for (auto i = sums.begin(); i != sums.end(); i++, j++) {
+        std::cout << "Show " << j << ": " << *i << std::endl;
     }
 }
