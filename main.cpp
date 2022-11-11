@@ -53,7 +53,7 @@ std::vector<float> createScoresVector(int A, int S) {
 }
 
 void printBestShows(std::vector<float> scores) {
-    std::vector<float> results = maxSubarray(scores, 0, scores.size());
+    std::vector<float> results = maxSubarray(scores, 0, scores.size()-1);
     std::cout << results[0]+1 << " " << results[1]+1 << std::endl;
 }
 
@@ -69,7 +69,7 @@ std::vector<float> maxCrossSubarray(std::vector<float> A, float low, float mid, 
     float leftsum = -1000, sum = 0;  // Find max-subarray of A[i..mid]
     for (int i = mid; i >= low; i--) {
         sum = sum + A[i];
-        if (sum > leftsum) {
+        if (sum >= leftsum) {
             leftsum = sum;
             maxleft = i;
         }
@@ -79,7 +79,7 @@ std::vector<float> maxCrossSubarray(std::vector<float> A, float low, float mid, 
     sum = 0; // Find max-subarray of A[mid+1..j]
     for (int j = mid+1; j <= high; j++) {
         sum = sum + A[j];
-        if (sum > rightsum) {
+        if (sum >= rightsum) {
             rightsum = sum;
             maxright = j;
         }
