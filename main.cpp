@@ -6,7 +6,9 @@
 
 void RockInRio();
 std::vector<float> createScoresVector(int A, int S);
-void getBestShows(std::vector<float> scores);
+void printBestShows(std::vector<float> scores);
+std::vector<float> maxSubarray(std::vector<float> A, float low, float high);
+std::vector<float> maxCrossSubarray(std::vector<float> A, float low, float mid, float high);
 void printScores(std::vector<float> scores);
 
 int main() {
@@ -29,9 +31,8 @@ void RockInRio() {
     do {
         std::cin >> A >> S;
         scoreSums = createScoresVector(A, S);
-        getBestShows(scoreSums);
-        printScores(scoreSums);
-
+        printBestShows(scoreSums);
+        //printScores(scoreSums);
     } while (A > 0 && S > 0);
 
 }
@@ -51,7 +52,8 @@ std::vector<float> createScoresVector(int A, int S) {
 }
 
 void printBestShows(std::vector<float> scores) {
-    return;
+    std::vector<float> results = maxSubarray(scores, 0, scores.size());
+    std::cout << results[0]+1 << " " << results[1]+1 << std::endl;
 }
 
 void printScores(std::vector<float> scores) {
@@ -59,4 +61,53 @@ void printScores(std::vector<float> scores) {
     for (auto i = scores.begin(); i != scores.end(); i++, j++) {
         std::cout << "Show " << j << ": " << *i << std::endl;
     }
+}
+
+std::vector<float> maxCrossSubarray(std::vector<float> A, float low, float mid, float high) {
+    float maxleft = 0, maxright = 0;
+    float leftsum = -1000, sum = 0;  // Find max-subarray of A[i..mid]
+    for (int i = mid; i > low; i--) {
+        sum = sum + A[i];
+        if (sum > leftsum) {
+            leftsum = sum;
+            maxleft = i;
+        }
+    }
+    
+    float rightsum = -1000; 
+    sum = 0; // Find max-subarray of A[mid+1..j]
+    for (int j = mid+1; j < high; j++) {
+        sum = sum + A[j];
+        if (sum > rightsum) {
+            rightsum = sum;
+            maxright = j;
+        }
+    }
+    
+    std::vector<float> results = {maxleft, maxright, leftsum+rightsum};
+    // Return the indices i and j and the sum of two subarrays
+    return results;
+}
+
+std::vector<float> maxSubarray(std::vector<float> A, float low, float high) {
+    if (high == low) {
+        std::vector<float> results = {low, high, A[low]};
+        return results;
+    } // base case: only one element
+        
+    // divide
+    int mid = (low + high)/2;
+    
+    // conquer
+    std::vector<float> left = maxSubarray(A, low, mid);
+    std::vector<float> right = maxSubarray(A, mid+1, high);
+    std::vector<float> cross = maxCrossSubarray(A, low, mid, high);
+
+    // combine
+    if (left[2] >= right[2] && left[2] >= cross[2])
+        return left;
+    else if (right[2] >= left[2] && right[2] >= cross[2])
+        return right;
+    else
+        return cross;
 }
