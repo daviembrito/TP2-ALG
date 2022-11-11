@@ -28,12 +28,13 @@ void RockInRio() {
     int A = 0, S = 0;
     std::vector<float> scoreSums;
 
-    do {
-        std::cin >> A >> S;
+    std::cin >> A >> S;
+    while (A > 0 && S > 0) {
         scoreSums = createScoresVector(A, S);
+        printScores(scoreSums);
         printBestShows(scoreSums);
-        //printScores(scoreSums);
-    } while (A > 0 && S > 0);
+        std::cin >> A >> S;
+    } 
 
 }
 
@@ -66,7 +67,7 @@ void printScores(std::vector<float> scores) {
 std::vector<float> maxCrossSubarray(std::vector<float> A, float low, float mid, float high) {
     float maxleft = 0, maxright = 0;
     float leftsum = -1000, sum = 0;  // Find max-subarray of A[i..mid]
-    for (int i = mid; i > low; i--) {
+    for (int i = mid; i >= low; i--) {
         sum = sum + A[i];
         if (sum > leftsum) {
             leftsum = sum;
@@ -76,7 +77,7 @@ std::vector<float> maxCrossSubarray(std::vector<float> A, float low, float mid, 
     
     float rightsum = -1000; 
     sum = 0; // Find max-subarray of A[mid+1..j]
-    for (int j = mid+1; j < high; j++) {
+    for (int j = mid+1; j <= high; j++) {
         sum = sum + A[j];
         if (sum > rightsum) {
             rightsum = sum;
