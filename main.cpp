@@ -6,7 +6,8 @@
 
 void RockInRio();
 std::vector<float> createScoresVector(int A, int S);
-void printScores(std::vector<float> sums);
+void getBestShows(std::vector<float> scores);
+void printScores(std::vector<float> scores);
 
 int main() {
   
@@ -20,7 +21,7 @@ int main() {
   RockInRio();
 }
 
-// Ler entradas e checar se os votos sao satisfaziveis
+// Le entradas e checa se os votos sao satisfaziveis
 void RockInRio() {
     int A = 0, S = 0;
     std::vector<float> scoreSums;
@@ -28,6 +29,7 @@ void RockInRio() {
     do {
         std::cin >> A >> S;
         scoreSums = createScoresVector(A, S);
+        getBestShows(scoreSums);
         printScores(scoreSums);
 
     } while (A > 0 && S > 0);
@@ -48,9 +50,13 @@ std::vector<float> createScoresVector(int A, int S) {
     return scoreSums;
 }
 
-void printScores(std::vector<float> sums) {
+void printBestShows(std::vector<float> scores) {
+    return;
+}
+
+void printScores(std::vector<float> scores) {
     int j = 1;
-    for (auto i = sums.begin(); i != sums.end(); i++, j++) {
+    for (auto i = scores.begin(); i != scores.end(); i++, j++) {
         std::cout << "Show " << j << ": " << *i << std::endl;
     }
 }
