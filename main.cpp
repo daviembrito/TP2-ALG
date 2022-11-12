@@ -31,7 +31,6 @@ void RockInRio() {
     std::cin >> A >> S;
     while (A > 0 && S > 0) {
         scoreSums = createScoresVector(A, S);
-        printScores(scoreSums);
         printBestShows(scoreSums);
         std::cin >> A >> S;
     } 
