@@ -4,26 +4,31 @@
 #include <vector>
 #include "rock.hpp"
 
-#define NINFINITY -10000
+#define MINUSINFINITY -10000
 
 std::vector<float> createScoresVector(int A, int S);
 void printBestShows(std::vector<float> scores);
-std::vector<float> maxSubarray(std::vector<float> A, float low, float high);
-std::vector<float> maxCrossSubarray(std::vector<float> A, float low, float mid, float high);
-void printScores(std::vector<float> scores);
+std::vector<float> maxShowSequence(std::vector<float> A, float low, float high);
+std::vector<float> maxCrossSequence(std::vector<float> A, float low, float mid, float high);
 
 int main() {
+    // Inicializando variaveis para guardar entradas
     int A = 0, S = 0;
     std::vector<float> scoreSums;
 
+    // Lendo entradas
     std::cin >> A >> S;
     while (A > 0 && S > 0) {
+        // Criando o vetor de notas dos shows
         scoreSums = createScoresVector(A, S);
+
+        // Imprimindo a sequencia de shows com maior nota agregada
         printBestShows(scoreSums);
         std::cin >> A >> S;
     } 
 }
 
+// Le notas e soma ao vetor final retornado
 std::vector<float> createScoresVector(int A, int S) {
     float score = 0;
     std::vector<float> scoreSums(S, 0);
@@ -38,19 +43,14 @@ std::vector<float> createScoresVector(int A, int S) {
     return scoreSums;
 }
 
+// Imprime o numero inicial e final da sequencia de shows com maior nota agregada
 void printBestShows(std::vector<float> scores) {
-    std::vector<float> results = maxSubarray(scores, 0, scores.size()-1);
+    std::vector<float> results = maxShowSequence(scores, 0, scores.size()-1);
     std::cout << results[0]+1 << " " << results[1]+1 << std::endl;
 }
 
-void printScores(std::vector<float> scores) {
-    int j = 1;
-    for (auto i = scores.begin(); i != scores.end(); i++, j++) {
-        std::cout << "Show " << j << ": " << *i << std::endl;
-    }
-}
-
-std::vector<float> maxSubarray(std::vector<float> A, float low, float high) {
+// Calcula os indices da maior subsequencia de notas de shows 
+std::vector<float> maxShowSequence(std::vector<float> A, float low, float high) {
     if (high == low) {
         std::vector<float> results = {low, high, A[low]};
         return results;
@@ -58,9 +58,9 @@ std::vector<float> maxSubarray(std::vector<float> A, float low, float high) {
         
     int mid = (low + high)/2;
     
-    std::vector<float> left = maxSubarray(A, low, mid);
-    std::vector<float> right = maxSubarray(A, mid+1, high);
-    std::vector<float> cross = maxCrossSubarray(A, low, mid, high);
+    std::vector<float> left = maxShowSequence(A, low, mid);
+    std::vector<float> right = maxShowSequence(A, mid+1, high);
+    std::vector<float> cross = maxCrossSequence(A, low, mid, high);
 
     if (left[2] >= right[2] && left[2] >= cross[2])
         return left;
@@ -70,12 +70,13 @@ std::vector<float> maxSubarray(std::vector<float> A, float low, float high) {
         return cross;
 }
 
-std::vector<float> maxCrossSubarray(std::vector<float> A, float low, float mid, float high) {
+// Funcao auxiliar para calcular a maior subsequencia cruzada de duas partes do vetor
+std::vector<float> maxCrossSequence(std::vector<float> A, float low, float mid, float high) {
     float maxleft = 0, maxright = 0, sum = 0;
 
-    float leftsum = NINFINITY;
+    float leftsum = MINUSINFINITY;
     for (int i = mid; i >= low; i--) {
-        sum = sum + A[i];
+        sum += A[i];
         if (sum >= leftsum) {
             leftsum = sum;
             maxleft = i;
@@ -83,9 +84,9 @@ std::vector<float> maxCrossSubarray(std::vector<float> A, float low, float mid, 
     }
     
     sum = 0;
-    float rightsum = NINFINITY;  
+    float rightsum = MINUSINFINITY;  
     for (int j = mid+1; j <= high; j++) {
-        sum = sum + A[j];
+        sum += A[j];
         if (sum >= rightsum) {
             rightsum = sum;
             maxright = j;
